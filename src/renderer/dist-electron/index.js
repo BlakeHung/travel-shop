@@ -1,12 +1,13 @@
-import { contextBridge } from "electron";
-contextBridge.exposeInMainWorld("electronAPI", {
-  // 這裡可以添加你需要的方法
-  platform: process.platform
-});
-window.addEventListener("DOMContentLoaded", () => {
-  console.log("Preload script loaded");
-});
-ebSecurity: false
+import { app, BrowserWindow } from "electron";
+import { join } from "path";
+const createWindow = () => {
+  const win = new BrowserWindow({
+    width: 1200,
+    height: 800,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+      webSecurity: false
     }
   });
   if (process.env.NODE_ENV === "development") {

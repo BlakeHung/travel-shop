@@ -1,65 +1,42 @@
-import { Layout, Menu } from 'antd';
-import { Outlet, useNavigate } from 'react-router-dom';
+import React from 'react'
+import { Layout, Menu } from 'antd'
+import { Outlet, useNavigate } from 'react-router-dom'
 import {
   HomeOutlined,
   ShoppingOutlined,
   ShoppingCartOutlined,
   OrderedListOutlined,
-} from '@ant-design/icons';
+  MessageOutlined
+} from '@ant-design/icons'
 
-const { Header, Content } = Layout;
+const { Header, Content } = Layout
 
-const MainLayout = () => {
-  const navigate = useNavigate();
+const MainLayout: React.FC = () => {
+  const navigate = useNavigate()
 
   const menuItems = [
-    {
-      key: '/',
-      icon: <HomeOutlined />,
-      label: '首頁',
-    },
-    {
-      key: '/products',
-      icon: <ShoppingOutlined />,
-      label: '商品列表',
-    },
-    {
-      key: '/cart',
-      icon: <ShoppingCartOutlined />,
-      label: '購物車',
-    },
-    {
-      key: '/orders',
-      icon: <OrderedListOutlined />,
-      label: '訂單',
-    },
-  ];
+    { key: '/', icon: <HomeOutlined />, label: '首頁' },
+    { key: '/products', icon: <ShoppingOutlined />, label: '商品' },
+    { key: '/cart', icon: <ShoppingCartOutlined />, label: '購物車' },
+    { key: '/orders', icon: <OrderedListOutlined />, label: '訂單' },
+    { key: '/chat', icon: <MessageOutlined />, label: '聊天' }
+  ]
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Header style={{ padding: 0 }}>
-        <div style={{ 
-          float: 'left', 
-          color: 'white', 
-          marginLeft: '20px',
-          fontSize: '18px',
-          fontWeight: 'bold'
-        }}>
-          旅行商店
-        </div>
+    <Layout>
+      <Header style={{ padding: 0, background: '#fff' }}>
         <Menu
-          theme="dark"
           mode="horizontal"
           items={menuItems}
           onClick={({ key }) => navigate(key)}
-          style={{ justifyContent: 'flex-end' }}
+          style={{ justifyContent: 'center' }}
         />
       </Header>
-      <Content style={{ padding: '24px', background: '#fff' }}>
+      <Content style={{ padding: '24px', minHeight: 'calc(100vh - 64px)' }}>
         <Outlet />
       </Content>
     </Layout>
-  );
-};
+  )
+}
 
-export default MainLayout;
+export default MainLayout

@@ -1,36 +1,30 @@
-import { BrowserRouter } from 'react-router-dom';
-import { Suspense } from 'react';
-import { Spin } from 'antd';
-import { useRoutes } from 'react-router-dom';
-import { routes } from './routes';
+import React from 'react'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import MainLayout from './layouts/MainLayout'
+import Home from './pages/Home'
+import Products from './pages/Products'
+import ProductDetail from './pages/ProductDetail'
+import Cart from './pages/Cart'
+import Orders from './pages/Orders'
+import Chat from './pages/Chat'
+import ChatRoom from './components/Chat/ChatRoom'
 
 function App() {
-  const element = useRoutes(routes);
-
   return (
-    <Suspense 
-      fallback={
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
-          alignItems: 'center', 
-          height: '100vh' 
-        }}>
-          <Spin size="large" />
-        </div>
-      }
-    >
-      {element}
-    </Suspense>
-  );
+    <Router>
+      <Routes>
+        <Route path="/" element={<MainLayout />}>
+          <Route index element={<Home />} />
+          <Route path="products" element={<Products />} />
+          <Route path="products/:id" element={<ProductDetail />} />
+          <Route path="cart" element={<Cart />} />
+          <Route path="orders" element={<Orders />} />
+          <Route path="chat" element={<Chat />} />
+          <Route path="chat/:roomId" element={<ChatRoom />} />
+        </Route>
+      </Routes>
+    </Router>
+  )
 }
 
-const WrappedApp = () => {
-  return (
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  );
-};
-
-export default WrappedApp;
+export default App

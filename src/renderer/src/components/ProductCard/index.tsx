@@ -1,39 +1,79 @@
-import { Card, Button, Image, Typography } from 'antd';
+import React from 'react';
+import { Card, Button, message } from 'antd';
 import { ShoppingCartOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 import { useCartStore } from '../../stores/useCartStore';
+import type { Product } from '../../types/product';
 
 const { Meta } = Card;
-const { Text } = Typography;
 
 interface ProductCardProps {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
-  description: string;
+  product: Product;
 }
 
-const ProductCard = ({ id, name, price, image, description }: ProductCardProps) => {
-  const addToCart = useCartStore(state => state.addToCart);
+const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  const navigate = useNavigate();
+  const addToCart = useCartStore((state) => state.addToCart);
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      quantity: 1,
+    });
+    message.success('已加入購物車');
+  };
+
+  const handleCardClick = () => {
+    navigate(`/products/${product.id}`);
+  };
 
   return (
     <Card
       hoverable
-      cover={<Image alt={name} src={image} />}
+      style={{ cursor: 'pointer' }}
+      cover={
+        <img 
+          alt={product.name} 
+          src={product.image} 
+          style={{ height: 200, objectFit: 'cover' }}
+        />
+      }
+      onClick={handleCardClick}
       actions={[
         <Button 
           type="primary" 
           icon={<ShoppingCartOutlined />}
-          onClick={() => addToCart({ id, name, price, quantity: 1 })}
+          onClick={handleAddToCart}
         >
           加入購物車
         </Button>
       ]}
     >
-      <Meta title={name} description={description} />
-      <Text strong style={{ fontSize: '18px', marginTop: '10px' }}>
-        ${price}
-      </Text>
+      <Meta
+        title={
+          <div style={{ fontSize: '16px', fontWeight: 'bold' }}>
+            {product.name}
+          </div>
+        }
+        description={
+          <>
+            <div style={{ height: '40px', overflow: 'hidden' }}>
+              {product.description}
+            </div>
+            <div style={{ 
+              color: '#f50', 
+              fontSize: '20px', 
+              marginTop: '10px',
+              fontWeight: 'bold' 
+            }}>
+              ${product.price}
+            </div>
+          </>
+        }
+      />
     </Card>
   );
 };
