@@ -1,71 +1,61 @@
 import { Request, Response } from 'express';
 import Product from '../models/Product';
-import { ApiError } from '../utils/ApiError';
 
-class ProductController {
-  // 獲取所有商品
+export const productController = {
+  // 獲取商品列表
   async getProducts(req: Request, res: Response) {
     try {
-      const products = await Product.find();
+      const { search, category } = req.query;
+      
+      // 建立篩選條件
+      const filter: any = {};
+      
+      // 如果有搜尋關鍵字
+      if (search) {
+        filter.$or = [
+          { name: { $regex: search, $options: 'i' } },
+          { description: { $regex: search, $options: 'i' } }
+        ];
+      }
+
+      // 如果有類別篩選
+      if (category && category !== 'all') {
+        filter.category = category;
+      }
+
+      const products = await Product.find(filter)
+        .sort({ createdAt: -1 }); // 最新的商品排在前面
+      
       res.json(products);
+      
     } catch (error) {
-      throw error;
+      console.error('Error getting products:', error);
+      res.status(500).json({ message: '獲取商品列表失敗' });
     }
-  }
+  },
 
   // 獲取單個商品
   async getProduct(req: Request, res: Response) {
     try {
       const product = await Product.findById(req.params.id);
       if (!product) {
-        throw new ApiError(404, '商品不存在');
+        return res.status(404).json({ message: '商品不存在' });
       }
       res.json(product);
     } catch (error) {
-      throw error;
+      console.error('Error getting product:', error);
+      res.status(500).json({ message: '獲取商品詳情失敗' });
     }
-  }
+  },
 
-  // 創建商品
-  async createProduct(req: Request, res: Response) {
+  // 獲取所有類別
+  async getCategories(req: Request, res: Response) {
     try {
-      const product = new Product(req.body);
-      await product.save();
-      res.status(201).json(product);
+      const categories = await Product.distinct('category');
+      res.json(categories);
     } catch (error) {
-      throw error;
+      console.error('Error getting categories:', error);
+      res.status(500).json({ message: '獲取類別列表失敗' });
     }
   }
-
-  // 更新商品
-  async updateProduct(req: Request, res: Response) {
-    try {
-      const product = await Product.findByIdAndUpdate(
-        req.params.id,
-        req.body,
-        { new: true }
-      );
-      if (!product) {
-        throw new ApiError(404, '商品不存在');
-      }
-      res.json(product);
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  // 刪除商品
-  async deleteProduct(req: Request, res: Response) {
-    try {
-      const product = await Product.findByIdAndDelete(req.params.id);
-      if (!product) {
-        throw new ApiError(404, '商品不存在');
-      }
-      res.status(204).send();
-    } catch (error) {
-      throw error;
-    }
-  }
-}
-
-export const productController = new ProductController(); 
+}; 

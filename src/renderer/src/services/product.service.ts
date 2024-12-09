@@ -1,24 +1,24 @@
 import api from '../utils/api';
-import type { Product } from '../types/product';
+import type { Product, ProductFilter } from '../types/product';
 
 export const productService = {
-  async getProducts() {
-    return api.get<Product[]>('/products');
+  // 獲取商品列表（支援篩選）
+  async getProducts(filter?: ProductFilter) {
+    const { data } = await api.get<Product[]>('/products', { 
+      params: filter 
+    });
+    return data;
   },
 
+  // 獲取單個商品
   async getProduct(id: string) {
-    return api.get<Product>(`/products/${id}`);
+    const { data } = await api.get<Product>(`/products/${id}`);
+    return data;
   },
 
-  async createProduct(data: Partial<Product>) {
-    return api.post<Product>('/products', data);
-  },
-
-  async updateProduct(id: string, data: Partial<Product>) {
-    return api.put<Product>(`/products/${id}`, data);
-  },
-
-  async deleteProduct(id: string) {
-    return api.delete(`/products/${id}`);
-  },
+  // 獲取所有類別
+  async getCategories() {
+    const { data } = await api.get<string[]>('/products/categories');
+    return data;
+  }
 }; 

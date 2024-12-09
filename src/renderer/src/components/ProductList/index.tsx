@@ -14,6 +14,7 @@ const ProductList: React.FC = () => {
   };
 
   const handleFilterChange = (value: string) => {
+    console.log(value);
     setFilter({ category: value });
   };
 
