@@ -2,6 +2,7 @@ import React from 'react';
 import { Row, Col, Input, Select, Spin } from 'antd';
 import { useProductStore } from '../../stores/useProductStore';
 import ProductCard from '../ProductCard';
+import { categories } from '../../mock/products';
 
 const { Search } = Input;
 
@@ -37,8 +38,11 @@ const ProductList: React.FC = () => {
               onChange={handleFilterChange}
             >
               <Select.Option value="all">全部</Select.Option>
-              <Select.Option value="electronics">電子產品</Select.Option>
-              <Select.Option value="clothing">服飾</Select.Option>
+              {categories.map(category => (
+                <Select.Option key={category.value} value={category.value}>
+                  {category.label}
+                </Select.Option>
+              ))}
             </Select>
           </Col>
         </Row>

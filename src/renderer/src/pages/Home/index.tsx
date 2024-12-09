@@ -1,5 +1,6 @@
 import React from 'react'
 import { Card, Row, Col, List, Tag, Typography } from 'antd'
+import { useNavigate } from 'react-router-dom'
 import {
   ShoppingOutlined,
   EnvironmentOutlined,
@@ -46,6 +47,8 @@ const travelProducts = [
 ]
 
 const Home: React.FC = () => {
+  const navigate = useNavigate()
+
   return (
     <div>
       <Title level={2}>熱門旅遊行程</Title>
@@ -56,6 +59,7 @@ const Home: React.FC = () => {
           <List.Item>
             <Card
               hoverable
+              onClick={() => navigate(`/products/${item.id}`)}
               cover={
                 <img
                   alt={item.title}

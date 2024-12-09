@@ -1,36 +1,18 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import type { User } from '../types/user';
+import { create } from 'zustand'
 
 interface AuthState {
-  user: User | null;
-  token: string | null;
-  isAuthenticated: boolean;
-  
-  // 操作方法
-  setUser: (user: User | null) => void;
-  setToken: (token: string | null) => void;
-  logout: () => void;
+  isAuthenticated: boolean
+  login: (email: string, password: string) => void
+  logout: () => void
 }
 
-export const useAuthStore = create<AuthState>()(
-  persist(
-    (set) => ({
-      user: null,
-      token: null,
-      isAuthenticated: false,
-
-      setUser: (user) => 
-        set({ user, isAuthenticated: !!user }),
-      
-      setToken: (token) => 
-        set({ token }),
-      
-      logout: () => 
-        set({ user: null, token: null, isAuthenticated: false }),
-    }),
-    {
-      name: 'auth-storage',
+export const useAuthStore = create<AuthState>((set) => ({
+  isAuthenticated: false,
+  login: (email: string, password: string) => {
+    // 簡單的模擬登入
+    if (email && password) {
+      set({ isAuthenticated: true })
     }
-  )
-); 
+  },
+  logout: () => set({ isAuthenticated: false })
+})) 
