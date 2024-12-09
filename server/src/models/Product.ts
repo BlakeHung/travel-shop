@@ -34,13 +34,13 @@ const productSchema = new mongoose.Schema(
     category: {
       type: String,
       required: true,
+      enum: ['japan', 'korea', 'thailand', 'singapore', 'indonesia', 'vietnam'],
     },
     stock: {
       type: Number,
       required: true,
       min: 0,
-      default: 0,
-    },
+    }
   },
   {
     timestamps: true,

@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import Product from '../models/Product';
 import { ApiError } from '../utils/ApiError';
 
-export const productController = {
+class ProductController {
   // 獲取所有商品
   async getProducts(req: Request, res: Response) {
     try {
@@ -11,7 +11,7 @@ export const productController = {
     } catch (error) {
       throw error;
     }
-  },
+  }
 
   // 獲取單個商品
   async getProduct(req: Request, res: Response) {
@@ -24,7 +24,7 @@ export const productController = {
     } catch (error) {
       throw error;
     }
-  },
+  }
 
   // 創建商品
   async createProduct(req: Request, res: Response) {
@@ -35,7 +35,7 @@ export const productController = {
     } catch (error) {
       throw error;
     }
-  },
+  }
 
   // 更新商品
   async updateProduct(req: Request, res: Response) {
@@ -52,7 +52,7 @@ export const productController = {
     } catch (error) {
       throw error;
     }
-  },
+  }
 
   // 刪除商品
   async deleteProduct(req: Request, res: Response) {
@@ -65,5 +65,7 @@ export const productController = {
     } catch (error) {
       throw error;
     }
-  },
-}; 
+  }
+}
+
+export const productController = new ProductController(); 

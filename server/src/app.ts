@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import routes from './routes';
+import productRoutes from './routes/product.routes';
 import { errorHandler } from './middleware/errorHandler';
 import { requestLogger } from './middleware/logger';
 
@@ -16,12 +16,10 @@ app.use(express.json());
 app.use(requestLogger);
 
 // Routes
-app.use('/api', routes);
+app.use('/api/products', productRoutes);
 
-// Error handling - 修正錯誤處理中間件的使用方式
-app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
-  errorHandler(err, req, res, next);
-});
+// Error handling
+app.use(errorHandler);
 
 // Database connection
 mongoose
