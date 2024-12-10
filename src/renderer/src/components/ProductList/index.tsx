@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Row, Col, Input, Select, Spin } from 'antd';
 import { useProductStore } from '../../stores/useProductStore';
 import ProductCard from '../ProductCard';
@@ -7,15 +7,33 @@ import { categories } from '../../mock/products';
 const { Search } = Input;
 
 const ProductList: React.FC = () => {
-  const { products, loading, error, searchProducts, setFilter } = useProductStore();
+  const { 
+    products, 
+    loading, 
+    error, 
+    searchProducts, 
+    setFilter,
+    initializeStore,
+    filter
+  } = useProductStore();
+
+  const [searchValue, setSearchValue] = useState('');
+
+  useEffect(() => {
+    initializeStore();
+  }, []);
 
   const handleSearch = (value: string) => {
+    setSearchValue(value);
     searchProducts(value);
   };
 
   const handleFilterChange = (value: string) => {
-    console.log(value);
-    setFilter({ category: value });
+    if (value === 'all') {
+      setFilter({});
+    } else {
+      setFilter({ category: value });
+    }
   };
 
   if (loading) return <Spin size="large" />;
@@ -29,6 +47,8 @@ const ProductList: React.FC = () => {
             <Search
               placeholder="搜索商品"
               onSearch={handleSearch}
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
               enterButton
             />
           </Col>
@@ -37,6 +57,7 @@ const ProductList: React.FC = () => {
               style={{ width: '100%' }}
               placeholder="選擇分類"
               onChange={handleFilterChange}
+              value={filter.category || 'all'}
             >
               <Select.Option value="all">全部</Select.Option>
               {categories.map(category => (

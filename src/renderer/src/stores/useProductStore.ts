@@ -9,7 +9,8 @@ interface ProductState {
   filter: ProductFilter;
   selectedProduct: Product | null;
   
-  // 操作方法
+  // 加入初始化方法
+  initializeStore: () => Promise<void>;
   fetchProducts: (filter?: ProductFilter) => Promise<void>;
   searchProducts: (keyword: string) => Promise<void>;
   setFilter: (filter: ProductFilter) => void;
@@ -23,10 +24,15 @@ export const useProductStore = create<ProductState>((set, get) => ({
   filter: {},
   selectedProduct: null,
 
+  // 加入初始化方法實作
+  initializeStore: async () => {
+    await get().fetchProducts();
+  },
+
   fetchProducts: async (filter?: ProductFilter) => {
     try {
       set({ loading: true, error: null });
-      const products = await productAPI.getProducts(filter);
+      const products = await productAPI.getProducts(filter || {});
       set({ products, loading: false });
     } catch (error) {
       set({ error: '獲取商品列表失敗', loading: false });
